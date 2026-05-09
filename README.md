@@ -182,44 +182,60 @@ public float friction;
 
 ---
 
-# Combined Example
-
 ```csharp
 using UnityEngine;
-using UnityEngine.Events;
 using TyroByte;
 
-public class BlinkEffect : MonoBehaviour
+public class WeaponController : MonoBehaviour
 {
     [Foldout(
-        "Blink Settings",
+        "Weapon Settings",
         true,
         startExpanded: true,
-        color: FoldoutColor.Teal)]
-    [Range(0f, 1f)]
-    public float smoothness = 1f;
+        color: FoldoutColor.Blue)]
+    [Range(0f, 250f)]
+    public float damage = 35f;
 
-    [Range(0f, 1f)]
-    public float curvature = 1f;
+    [Range(0.1f, 5f)]
+    public float fireRate = 0.25f;
+
+    public bool automaticFire = true;
 
     [Foldout(
-        "Events",
+        "Recoil",
+        true,
+        color: FoldoutColor.Orange)]
+    [Range(0f, 10f)]
+    public float verticalKick = 2f;
+
+    [Range(0f, 10f)]
+    public float horizontalKick = 1f;
+
+    public float recoilRecoverySpeed = 6f;
+
+    [Foldout(
+        "Audio",
         true,
         color: FoldoutColor.Green)]
-    public UnityEvent OnBlinkIn;
+    public AudioClip fireSound;
 
-    public UnityEvent OnBlinkComplete;
+    public AudioClip reloadSound;
+
+    public float volume = 0.8f;
 
     [Foldout(
-        "Debug",
+        "Debug Info",
         true,
         readOnly: true,
         color: FoldoutColor.Red)]
-    public Material curvedMaterial;
+    public bool isReloading;
 
-    public float time;
+    public int currentAmmo;
+
+    public float recoilOffset;
 }
 ```
+
 ---
 
 # License
