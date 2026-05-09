@@ -1,0 +1,18 @@
+{
+    "name": "TyroByte.UIFoldout.Editor",
+    "rootNamespace": "TyroByte",
+    "references": [
+        "GUID:9a6f7e77a66e0894ca9448bca514c23d"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
