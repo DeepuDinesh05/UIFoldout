@@ -24,8 +24,9 @@ Built for developers who want better inspector usability without writing custom 
 
 ## 1. Manual Import
 
-1. Download & Import UnityPackage from releases section.
-2. Let Unity recompile
+1. Download or clone the repository
+2. Copy the `TyroByte` folder into your Unity project's `Assets` folder
+3. Let Unity recompile
 
 ---
 
