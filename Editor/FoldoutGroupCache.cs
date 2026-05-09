@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace TyroByte.EditorTools
+namespace TyroByte
 {
     /// <summary>
     /// Holds the runtime state for one foldout group during an inspector session.

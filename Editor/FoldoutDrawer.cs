@@ -15,7 +15,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace TyroByte.EditorTools
+namespace TyroByte
 {
     /// <summary>
     /// Handles all IMGUI drawing for a single <see cref="FoldoutGroupCache"/>.

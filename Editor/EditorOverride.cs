@@ -19,7 +19,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace TyroByte.EditorTools
+namespace TyroByte
 {
     /// <summary>
     /// Fallback custom editor for all MonoBehaviours and ScriptableObjects.

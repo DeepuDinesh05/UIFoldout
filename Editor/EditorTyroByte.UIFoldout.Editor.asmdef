@@ -1,9 +1,0 @@
-{
-  "name": "TyroByte.UIFoldout.Editor",
-  "references": [
-    "TyroByte.UIFoldout"
-  ],
-  "includePlatforms": [
-    "Editor"
-  ]
-}
