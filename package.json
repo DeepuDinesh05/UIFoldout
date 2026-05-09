@@ -1,0 +1,10 @@
+{
+  "name": "com.tyrobyte.uifoldout",
+  "version": "1.0.0",
+  "displayName": "UIFoldout",
+  "description": "Professional inspector foldout system for Unity.",
+  "unity": "2021.3",
+  "author": {
+    "name": "TyroByte"
+  }
+}
