@@ -8,7 +8,7 @@
  *
  *    Product  : UIFoldout
  *    Company  : TyroByte Creations
- *    Version  : 1.0.0
+ *    Version  : 1.1.0
  */
 
 // This file has a compile-time dependency on Unity Netcode for GameObjects
