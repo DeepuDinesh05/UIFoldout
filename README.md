@@ -243,11 +243,16 @@ public class WeaponController : MonoBehaviour
 (Unity Netcode for GameObjects), including proper handling of `NetworkVariable<T>` and
 `NetworkList<T>` fields.
 
-This file has a compile-time dependency on `Unity.Netcode.Runtime`, referenced by name in
-`TyroByte.UIFoldout.Editor.asmdef`. That reference only resolves when
-`com.unity.netcode.gameobjects` is installed, so projects without it are unaffected by the
-asmdef itself. Compilation of the file is additionally **opt-in** behind a manual scripting
-define, so projects with Netcode installed but not yet using it stay unaffected too:
+`NetworkEditorOverride.cs` lives in its own assembly
+(`Editor/Netcode/TyroByte.UIFoldout.Netcode.Editor.asmdef`), which references
+`Unity.Netcode.Runtime` by name. That assembly is gated behind a `defineConstraints` entry
+for the `TYROBYTE_NETCODE_GAMEOBJECTS` scripting define, so Unity skips compiling it —
+reference included — entirely for projects that don't set the define, regardless of
+whether Netcode for GameObjects happens to be installed.
+
+If Netcode for GameObjects is detected in the project, UIFoldout prompts you once to add
+the define automatically (and removes it automatically if Netcode is later uninstalled).
+You can decline the prompt or add it yourself:
 
 ```text
 Project Settings → Player → Other Settings → Scripting Define Symbols

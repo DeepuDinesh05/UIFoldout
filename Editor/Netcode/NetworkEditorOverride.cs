@@ -10,12 +10,13 @@
  *    Version  : 1.1.0
  */
 
-// This file has a compile-time dependency on Unity Netcode for GameObjects
-// (Unity.Netcode.Runtime), referenced by name in TyroByte.UIFoldout.Editor.asmdef.
-// That reference only resolves when com.unity.netcode.gameobjects is installed, so
-// projects without it are unaffected by the asmdef itself. Compilation of this file
-// is additionally opt-in behind a manual scripting define so it stays inert even in
-// projects where the reference resolves but Netcode isn't actually being used yet:
+// This file lives in its own assembly (TyroByte.UIFoldout.Netcode.Editor) with a
+// by-name reference to Unity.Netcode.Runtime. That reference only resolves when
+// com.unity.netcode.gameobjects is installed, so this assembly is additionally
+// gated behind a defineConstraint on TYROBYTE_NETCODE_GAMEOBJECTS in its asmdef —
+// when the define isn't set, Unity skips compiling this assembly (and validating
+// its references) entirely, so projects without Netcode are completely unaffected.
+// Opt in manually once Netcode for GameObjects is installed:
 //
 //   Project Settings -> Player -> Other Settings -> Scripting Define Symbols
 //   Add: TYROBYTE_NETCODE_GAMEOBJECTS

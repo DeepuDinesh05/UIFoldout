@@ -1,8 +1,10 @@
 {
-    "name": "TyroByte.UIFoldout.Editor",
+    "name": "TyroByte.UIFoldout.Netcode.Editor",
     "rootNamespace": "TyroByte",
     "references": [
-        "GUID:9a6f7e77a66e0894ca9448bca514c23d"
+        "GUID:9a6f7e77a66e0894ca9448bca514c23d",
+        "GUID:d0fe06277c2c73542834c82f0ec52a61",
+        "Unity.Netcode.Runtime"
     ],
     "includePlatforms": [
         "Editor"
@@ -12,7 +14,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "TYROBYTE_NETCODE_GAMEOBJECTS"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }
