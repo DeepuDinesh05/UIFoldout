@@ -237,6 +237,72 @@ public class WeaponController : MonoBehaviour
 
 ---
 
+# Network Behaviour Support (Unity Netcode for GameObjects)
+
+`NetworkEditorOverride.cs` extends the same `[Foldout]` workflow to `NetworkBehaviour`
+(Unity Netcode for GameObjects), including proper handling of `NetworkVariable<T>` and
+`NetworkList<T>` fields.
+
+This file has a compile-time dependency on `Unity.Netcode.Runtime`, referenced by name in
+`TyroByte.UIFoldout.Editor.asmdef`. That reference only resolves when
+`com.unity.netcode.gameobjects` is installed, so projects without it are unaffected by the
+asmdef itself. Compilation of the file is additionally **opt-in** behind a manual scripting
+define, so projects with Netcode installed but not yet using it stay unaffected too:
+
+```text
+Project Settings → Player → Other Settings → Scripting Define Symbols
+Add: TYROBYTE_NETCODE_GAMEOBJECTS
+```
+
+Only add this if `com.unity.netcode.gameobjects` is installed in the project.
+
+```csharp
+using Unity.Netcode;
+using TyroByte;
+
+public class PlayerNetwork : NetworkBehaviour
+{
+    [Foldout("Health", true)]
+    public NetworkVariable<int> currentHealth = new NetworkVariable<int>(100);
+
+    public NetworkVariable<bool> isAlive = new NetworkVariable<bool>(true);
+
+    [Foldout("Inventory", true)]
+    public NetworkList<int> itemIds;
+}
+```
+
+### What it resolves
+
+`NetworkVariableBase` (the base of `NetworkVariable<T>` and `NetworkList<T>`) is
+`[Serializable]`, so it shows up in Unity's `SerializedObject` iteration — but drawing it
+with a plain `PropertyField` renders its internal serialized layout, not the value, and
+ignores Netcode's write-permission model entirely. This editor instead:
+
+- Detects `NetworkVariableBase`-derived fields via reflection and pulls them out of the
+  normal `SerializedProperty` pass, so they never render as broken nested fields.
+- Draws `NetworkVariable<T>.Value` using a type-appropriate field (int/float/bool/string/
+  enum/Vector2/3/4/Quaternion/Color), falling back to a read-only label for unsupported
+  types (e.g. custom `INetworkSerializable` structs).
+- Disables editing when the local client can't write to the variable (checked via
+  `NetworkVariableBase.CanClientWrite`, matching `WritePerm` — `Server` vs `Owner` — and
+  actual runtime ownership), with a small note explaining why it's locked, instead of
+  silently discarding edits the network layer would reject.
+- Shows `NetworkList<T>` read-only with an item count, matching Netcode's own inspector.
+- Warns if the `GameObject` (or its parents) has no `NetworkObject`, since such a
+  `NetworkBehaviour` won't function at runtime.
+- Respects `[HideInInspector]` and `[NonSerialized]` on NetworkVariable fields.
+
+### Known limitations
+
+- No multi-object editing (`[CanEditMultipleObjects]` is intentionally not used) —
+  NetworkVariable values are read/written against a single `target`.
+- This editor takes over from Netcode's own `NetworkBehaviourEditor` for every
+  `NetworkBehaviour` in the project; that's expected since a project-defined
+  `[CustomEditor]` takes precedence over a package's built-in one.
+
+---
+
 # License
 
 MIT License
