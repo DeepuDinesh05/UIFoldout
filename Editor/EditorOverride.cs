@@ -142,7 +142,7 @@ namespace TyroByte
             foreach (var pair in _groupCache)
             {
                 string prefsKey = BuildPrefsKey(pair.Key);
-                FoldoutDrawer.Draw(pair.Value, _headerStyle, _colors, prefsKey);
+                FoldoutDrawer.Draw(pair.Value, _headerStyle, _colors, prefsKey, target);
             }
 
             // Draw any remaining ungrouped properties (skip the Script field at index 0)

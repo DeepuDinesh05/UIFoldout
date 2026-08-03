@@ -12,8 +12,11 @@
  */
 
 #if UNITY_EDITOR
+using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace TyroByte
 {
@@ -46,11 +49,20 @@ namespace TyroByte
         /// <param name="headerStyle">The GUIStyle for the foldout toggle label.</param>
         /// <param name="colors">Theme colours for the current skin.</param>
         /// <param name="prefsKey">EditorPrefs key used to persist expanded state.</param>
+        /// <param name="targetObject">The inspected object, passed through to <paramref name="customFieldDrawer"/>.</param>
+        /// <param name="customFieldDrawer">
+        ///   Optional renderer for <see cref="FoldoutGroupCache.CustomFields"/>. Left null by
+        ///   the generic MonoBehaviour/ScriptableObject editor; supplied by specialized
+        ///   editors (e.g. a NetworkBehaviour editor) that need to draw fields with no
+        ///   usable SerializedProperty representation.
+        /// </param>
         public static void Draw(
             FoldoutGroupCache group,
             GUIStyle          headerStyle,
             ThemeColors       colors,
-            string            prefsKey)
+            string            prefsKey,
+            Object            targetObject,
+            Action<FieldInfo, Object> customFieldDrawer = null)
         {
             // ── Header bar ────────────────────────────────────────────────────
             var headerRect = EditorGUILayout.BeginVertical();
@@ -120,7 +132,21 @@ namespace TyroByte
                         new GUIContent(prop.name.FirstLetterToUpperCase()),
                         true);
 
-                    if (i == group.Props.Count - 1)
+                    if (i == group.Props.Count - 1 && group.CustomFields.Count == 0)
+                        EditorGUILayout.Space();
+                }
+
+                // ── Fields with no usable SerializedProperty (e.g. NetworkVariable<T>) ──
+                if (customFieldDrawer != null)
+                {
+                    for (int i = 0; i < group.CustomFields.Count; i++)
+                    {
+                        var field = group.CustomFields[i];
+                        DrawSpacersFor(field);
+                        customFieldDrawer(field, targetObject);
+                    }
+
+                    if (group.CustomFields.Count > 0)
                         EditorGUILayout.Space();
                 }
 
@@ -151,12 +177,20 @@ namespace TyroByte
 
             var field = targetType.GetField(
                 prop.name,
-                System.Reflection.BindingFlags.Public |
-                System.Reflection.BindingFlags.NonPublic |
-                System.Reflection.BindingFlags.Instance);
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             if (field == null) return;
 
+            DrawSpacersFor(field);
+        }
+
+        /// <summary>
+        /// Reads [Space] and [Header] attributes directly off a reflected field
+        /// and inserts the appropriate IMGUI layout elements. Shared by both the
+        /// SerializedProperty path above and custom (non-serialized) field drawing.
+        /// </summary>
+        private static void DrawSpacersFor(FieldInfo field)
+        {
             // [Space]
             var spaceAttr = System.Attribute.GetCustomAttribute(field, typeof(SpaceAttribute)) as SpaceAttribute;
             if (spaceAttr != null)
